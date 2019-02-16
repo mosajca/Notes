@@ -15,15 +15,20 @@ import javax.validation.Valid;
 import notes.model.Note;
 import notes.model.NoteForm;
 import notes.model.NoteRepository;
+import notes.model.User;
+import notes.model.UserForm;
+import notes.model.UserRepository;
 
 @Controller
 public class MainController {
 
     private final NoteRepository noteRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public MainController(NoteRepository noteRepository) {
+    public MainController(NoteRepository noteRepository, UserRepository userRepository) {
         this.noteRepository = noteRepository;
+        this.userRepository = userRepository;
     }
 
     @GetMapping("/")
@@ -68,6 +73,21 @@ public class MainController {
     @RequestMapping("/delete/{id}")
     public String delete(@PathVariable Long id) {
         noteRepository.deleteById(id);
+        return "redirect:/";
+    }
+
+    @GetMapping("/register")
+    public String register(Model model) {
+        model.addAttribute("form", new UserForm());
+        return "register";
+    }
+
+    @PostMapping("/register")
+    public String registerUser(@ModelAttribute("form") @Valid UserForm form, BindingResult result) {
+        if (result.hasErrors()) {
+            return "register";
+        }
+        userRepository.save(new User(form.getName(), form.getPassword()));
         return "redirect:/";
     }
 
