@@ -1,6 +1,7 @@
 package notes.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,11 +25,13 @@ public class MainController {
 
     private final NoteRepository noteRepository;
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public MainController(NoteRepository noteRepository, UserRepository userRepository) {
+    public MainController(NoteRepository noteRepository, UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.noteRepository = noteRepository;
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping("/")
@@ -87,7 +90,7 @@ public class MainController {
         if (result.hasErrors()) {
             return "register";
         }
-        userRepository.save(new User(form.getName(), form.getPassword()));
+        userRepository.save(new User(form.getName(), passwordEncoder.encode(form.getPassword())));
         return "redirect:/";
     }
 
