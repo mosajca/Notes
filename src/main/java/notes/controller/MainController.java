@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.security.Principal;
 import javax.validation.Valid;
 
 import notes.model.Note;
@@ -35,8 +36,9 @@ public class MainController {
     }
 
     @GetMapping("/")
-    public String main(Model model) {
-        model.addAttribute("notes", noteRepository.findAll());
+    public String main(Model model, Principal principal) {
+        User user = userRepository.findByName(principal.getName());
+        model.addAttribute("notes", user.getNotes());
         return "main";
     }
 
@@ -47,35 +49,45 @@ public class MainController {
     }
 
     @PostMapping("/add")
-    public String addNote(@ModelAttribute("form") @Valid NoteForm form, BindingResult result) {
+    public String addNote(@ModelAttribute("form") @Valid NoteForm form, BindingResult result, Principal principal) {
         if (result.hasErrors()) {
             return "add";
         }
-        noteRepository.save(new Note(form.getTitle(), form.getContent()));
+        User user = userRepository.findByName(principal.getName());
+        noteRepository.save(new Note(form.getTitle(), form.getContent(), user));
         return "redirect:/";
     }
 
     @GetMapping("/update/{id}")
-    public String update(@PathVariable Long id, Model model) {
+    public String update(@PathVariable Long id, Model model, Principal principal) {
+        User user = userRepository.findByName(principal.getName());
         return noteRepository.findById(id)
+                .filter(x -> x.getUser().getId().equals(user.getId()))
                 .map(x -> model.addAttribute("form", new NoteForm(x.getTitle(), x.getContent())))
                 .map(x -> "update").orElse("redirect:/");
     }
 
     @PostMapping("/update/{id}")
-    public String updateNote(@PathVariable Long id, @ModelAttribute("form") @Valid NoteForm form, BindingResult result) {
+    public String updateNote(@PathVariable Long id, @ModelAttribute("form") @Valid NoteForm form,
+                             BindingResult result, Principal principal) {
         if (result.hasErrors()) {
             return "update";
         }
-        Note note = new Note(form.getTitle(), form.getContent());
+        User user = userRepository.findByName(principal.getName());
+        Note note = new Note(form.getTitle(), form.getContent(), user);
         note.setId(id);
-        noteRepository.save(note);
+        if (user.getNotes().stream().anyMatch(x -> x.getId().equals(id))) {
+            noteRepository.save(note);
+        }
         return "redirect:/";
     }
 
     @RequestMapping("/delete/{id}")
-    public String delete(@PathVariable Long id) {
-        noteRepository.deleteById(id);
+    public String delete(@PathVariable Long id, Principal principal) {
+        User user = userRepository.findByName(principal.getName());
+        if (user.getNotes().stream().anyMatch(x -> x.getId().equals(id))) {
+            noteRepository.deleteById(id);
+        }
         return "redirect:/";
     }
 

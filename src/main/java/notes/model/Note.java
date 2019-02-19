@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import java.time.OffsetDateTime;
 
 @Entity
@@ -29,12 +31,17 @@ public class Note {
     @UpdateTimestamp
     private OffsetDateTime updateTimestamp;
 
+    @ManyToOne
+    @JoinColumn(name = "userId")
+    private User user;
+
     public Note() {
     }
 
-    public Note(String title, String content) {
+    public Note(String title, String content, User user) {
         this.title = title;
         this.content = content;
+        this.user = user;
     }
 
     public Long getId() {
@@ -75,6 +82,14 @@ public class Note {
 
     public void setUpdateTimestamp(OffsetDateTime updateTimestamp) {
         this.updateTimestamp = updateTimestamp;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
 }
