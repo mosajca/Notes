@@ -37,7 +37,7 @@ public class MainController {
 
     @GetMapping("/")
     public String main(Model model, Principal principal) {
-        User user = userRepository.findByName(principal.getName());
+        User user = userRepository.findById(principal.getName()).get();
         model.addAttribute("notes", user.getNotes());
         return "main";
     }
@@ -53,16 +53,16 @@ public class MainController {
         if (result.hasErrors()) {
             return "add";
         }
-        User user = userRepository.findByName(principal.getName());
+        User user = userRepository.findById(principal.getName()).get();
         noteRepository.save(new Note(form.getTitle(), form.getContent(), user));
         return "redirect:/";
     }
 
     @GetMapping("/update/{id}")
     public String update(@PathVariable Long id, Model model, Principal principal) {
-        User user = userRepository.findByName(principal.getName());
+        User user = userRepository.findById(principal.getName()).get();
         return noteRepository.findById(id)
-                .filter(x -> x.getUser().getId().equals(user.getId()))
+                .filter(x -> x.getUser().getUsername().equals(user.getUsername()))
                 .map(x -> model.addAttribute("form", new NoteForm(x.getTitle(), x.getContent())))
                 .map(x -> "update").orElse("redirect:/");
     }
@@ -73,7 +73,7 @@ public class MainController {
         if (result.hasErrors()) {
             return "update";
         }
-        User user = userRepository.findByName(principal.getName());
+        User user = userRepository.findById(principal.getName()).get();
         Note note = new Note(form.getTitle(), form.getContent(), user);
         note.setId(id);
         if (user.getNotes().stream().anyMatch(x -> x.getId().equals(id))) {
@@ -84,7 +84,7 @@ public class MainController {
 
     @RequestMapping("/delete/{id}")
     public String delete(@PathVariable Long id, Principal principal) {
-        User user = userRepository.findByName(principal.getName());
+        User user = userRepository.findById(principal.getName()).get();
         if (user.getNotes().stream().anyMatch(x -> x.getId().equals(id))) {
             noteRepository.deleteById(id);
         }

@@ -25,15 +25,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.jdbcAuthentication().dataSource(dataSource).passwordEncoder(encoder())
-                .usersByUsernameQuery("select name, password, 1 from user_ where name=?")
-                .authoritiesByUsernameQuery("select ?, 'USER'");
+        auth.jdbcAuthentication().dataSource(dataSource).passwordEncoder(encoder());
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/register").permitAll()
+                .antMatchers("/register", "/favicon.ico").permitAll()
                 .anyRequest().authenticated()
                 .and().formLogin();
     }
