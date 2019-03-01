@@ -9,7 +9,7 @@
 </head>
 <body>
 
-<%--@elvariable id="form" type="notes.model.NoteForm"--%>
+<%--@elvariable id="form" type="notes.model.note.NoteForm"--%>
 <form:form method="post" modelAttribute="form">
     <p>Tytuł: <form:input path="title"/></p>
     <p>Treść: <form:textarea path="content"/></p>

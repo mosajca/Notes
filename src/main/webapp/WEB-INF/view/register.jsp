@@ -9,7 +9,7 @@
 </head>
 <body>
 
-<%--@elvariable id="form" type="notes.model.UserForm"--%>
+<%--@elvariable id="form" type="notes.model.user.UserForm"--%>
 <form:form action="/register" method="post" modelAttribute="form">
     <p>Nazwa: <form:input path="name"/></p>
     <p>Hasło: <form:password path="password"/></p>

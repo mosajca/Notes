@@ -1,4 +1,4 @@
-package notes.model;
+package notes.model.user;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -9,6 +9,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.Collections;
 import java.util.List;
+
+import notes.model.authority.Authority;
+import notes.model.note.Note;
 
 @Entity
 @Table(name = "users")

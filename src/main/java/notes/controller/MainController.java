@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.security.Principal;
 import javax.validation.Valid;
 
-import notes.model.Note;
-import notes.model.NoteForm;
-import notes.model.NoteRepository;
-import notes.model.User;
-import notes.model.UserForm;
-import notes.model.UserRepository;
+import notes.model.note.Note;
+import notes.model.note.NoteForm;
+import notes.model.note.NoteRepository;
+import notes.model.user.User;
+import notes.model.user.UserForm;
+import notes.model.user.UserRepository;
 
 @Controller
 public class MainController {

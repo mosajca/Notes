@@ -1,4 +1,4 @@
-package notes.model;
+package notes.model.authority;
 
 import java.io.Serializable;
 import java.util.Objects;

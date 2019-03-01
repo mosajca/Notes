@@ -9,7 +9,7 @@
 </head>
 <body>
 
-<%--@elvariable id="notes" type="java.util.List<notes.model.Note>"--%>
+<%--@elvariable id="notes" type="java.util.List<notes.model.note.Note>"--%>
 <c:forEach var="note" items="${notes}">
     <h2><c:out value="${note.title}"/></h2>
     <p><c:out value="${note.content}"/></p>
