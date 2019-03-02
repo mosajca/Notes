@@ -102,7 +102,7 @@ public class MainController {
         if (result.hasErrors()) {
             return "register";
         }
-        userRepository.save(new User(form.getName(), passwordEncoder.encode(form.getPassword())));
+        userRepository.save(new User(form.getUsername(), passwordEncoder.encode(form.getPassword())));
         return "redirect:/";
     }
 

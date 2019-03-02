@@ -7,7 +7,7 @@ public class UserForm {
 
     @NotNull
     @Size(max = 255)
-    private String name;
+    private String username;
     @NotNull
     @Size(max = 255)
     private String password;
@@ -15,17 +15,17 @@ public class UserForm {
     public UserForm() {
     }
 
-    public UserForm(String name, String password) {
-        this.name = name;
+    public UserForm(String username, String password) {
+        this.username = username;
         this.password = password;
     }
 
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
