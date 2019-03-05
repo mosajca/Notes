@@ -3,7 +3,6 @@ package notes.model.user;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -26,13 +25,17 @@ public class User {
     @Column(nullable = false)
     private Boolean enabled;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private List<Note> notes;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private List<Authority> authorities;
 
     public User() {
+    }
+
+    public User(String username) {
+        this.username = username;
     }
 
     public User(String username, String password) {

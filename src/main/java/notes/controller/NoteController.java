@@ -1,7 +1,6 @@
 package notes.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,27 +17,20 @@ import notes.model.note.Note;
 import notes.model.note.NoteForm;
 import notes.model.note.NoteRepository;
 import notes.model.user.User;
-import notes.model.user.UserForm;
-import notes.model.user.UserRepository;
 
 @Controller
-public class MainController {
+public class NoteController {
 
     private final NoteRepository noteRepository;
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public MainController(NoteRepository noteRepository, UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public NoteController(NoteRepository noteRepository) {
         this.noteRepository = noteRepository;
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping("/")
     public String main(Model model, Principal principal) {
-        User user = userRepository.findById(principal.getName()).get();
-        model.addAttribute("notes", user.getNotes());
+        model.addAttribute("notes", noteRepository.findByUser_Username(principal.getName()));
         return "main";
     }
 
@@ -53,16 +45,13 @@ public class MainController {
         if (result.hasErrors()) {
             return "add";
         }
-        User user = userRepository.findById(principal.getName()).get();
-        noteRepository.save(new Note(form.getTitle(), form.getContent(), user));
+        noteRepository.save(new Note(form.getTitle(), form.getContent(), new User(principal.getName())));
         return "redirect:/";
     }
 
     @GetMapping("/update/{id}")
     public String update(@PathVariable Long id, Model model, Principal principal) {
-        User user = userRepository.findById(principal.getName()).get();
-        return noteRepository.findById(id)
-                .filter(x -> x.getUser().getUsername().equals(user.getUsername()))
+        return noteRepository.findByIdAndUser_Username(id, principal.getName())
                 .map(x -> model.addAttribute("form", new NoteForm(x.getTitle(), x.getContent())))
                 .map(x -> "update").orElse("redirect:/");
     }
@@ -73,36 +62,17 @@ public class MainController {
         if (result.hasErrors()) {
             return "update";
         }
-        User user = userRepository.findById(principal.getName()).get();
-        Note note = new Note(form.getTitle(), form.getContent(), user);
-        note.setId(id);
-        if (user.getNotes().stream().anyMatch(x -> x.getId().equals(id))) {
-            noteRepository.save(note);
-        }
+        noteRepository.findByIdAndUser_Username(id, principal.getName()).map(x -> {
+            x.setTitle(form.getTitle());
+            x.setContent(form.getContent());
+            return x;
+        }).ifPresent(noteRepository::save);
         return "redirect:/";
     }
 
     @RequestMapping("/delete/{id}")
     public String delete(@PathVariable Long id, Principal principal) {
-        User user = userRepository.findById(principal.getName()).get();
-        if (user.getNotes().stream().anyMatch(x -> x.getId().equals(id))) {
-            noteRepository.deleteById(id);
-        }
-        return "redirect:/";
-    }
-
-    @GetMapping("/register")
-    public String register(Model model) {
-        model.addAttribute("form", new UserForm());
-        return "register";
-    }
-
-    @PostMapping("/register")
-    public String registerUser(@ModelAttribute("form") @Valid UserForm form, BindingResult result) {
-        if (result.hasErrors()) {
-            return "register";
-        }
-        userRepository.save(new User(form.getUsername(), passwordEncoder.encode(form.getPassword())));
+        noteRepository.findByIdAndUser_Username(id, principal.getName()).ifPresent(noteRepository::delete);
         return "redirect:/";
     }
 
