@@ -13,6 +13,7 @@
 <form:form action="/register" method="post" modelAttribute="form">
     <p>Nazwa: <form:input path="username"/></p>
     <p>Hasło: <form:password path="password"/></p>
+    <p>Email: <form:input path="email" type="email"/></p>
     <button type="submit">zarejestruj</button>
 </form:form>
 

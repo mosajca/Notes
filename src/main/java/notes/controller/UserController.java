@@ -35,10 +35,10 @@ public class UserController {
 
     @PostMapping("/register")
     public String registerUser(@ModelAttribute("form") @Valid UserForm form, BindingResult result) {
-        if (result.hasErrors()) {
+        if (result.hasErrors() || userRepository.existsByUsernameOrEmail(form.getUsername(), form.getEmail())) {
             return "register";
         }
-        userRepository.save(new User(form.getUsername(), passwordEncoder.encode(form.getPassword())));
+        userRepository.save(new User(form.getUsername(), passwordEncoder.encode(form.getPassword()), form.getEmail()));
         return "redirect:/";
     }
 
