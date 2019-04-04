@@ -45,7 +45,7 @@ public class User {
         this.username = username;
         this.password = password;
         this.email = email;
-        enabled = true;
+        enabled = false;
         authorities = Collections.singletonList(new Authority(this, "USER"));
     }
 

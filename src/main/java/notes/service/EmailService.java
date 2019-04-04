@@ -19,7 +19,7 @@ public class EmailService {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
         message.setSubject("Aktywuj konto");
-        message.setText("http://localhost:8080/activate/" + token);
+        message.setText("http://localhost:8080/activate?token=" + token);
         javaMailSender.send(message);
     }
 
