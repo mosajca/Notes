@@ -13,24 +13,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.security.Principal;
 import javax.validation.Valid;
 
-import notes.model.note.Note;
 import notes.model.note.NoteForm;
-import notes.model.note.NoteRepository;
-import notes.model.user.User;
+import notes.service.NoteService;
 
 @Controller
 public class NoteController {
 
-    private final NoteRepository noteRepository;
+    private final NoteService noteService;
 
     @Autowired
-    public NoteController(NoteRepository noteRepository) {
-        this.noteRepository = noteRepository;
+    public NoteController(NoteService noteService) {
+        this.noteService = noteService;
     }
 
     @GetMapping("/")
     public String main(Model model, Principal principal) {
-        model.addAttribute("notes", noteRepository.findByUser_Username(principal.getName()));
+        model.addAttribute("notes", noteService.findAll(principal.getName()));
         return "main";
     }
 
@@ -45,13 +43,13 @@ public class NoteController {
         if (result.hasErrors()) {
             return "add";
         }
-        noteRepository.save(new Note(form.getTitle(), form.getContent(), new User(principal.getName())));
+        noteService.save(principal.getName(), form);
         return "redirect:/";
     }
 
     @GetMapping("/update/{id}")
     public String update(@PathVariable Long id, Model model, Principal principal) {
-        return noteRepository.findByIdAndUser_Username(id, principal.getName())
+        return noteService.findById(principal.getName(), id)
                 .map(x -> model.addAttribute("form", new NoteForm(x.getTitle(), x.getContent())))
                 .map(x -> "update").orElse("redirect:/");
     }
@@ -62,17 +60,13 @@ public class NoteController {
         if (result.hasErrors()) {
             return "update";
         }
-        noteRepository.findByIdAndUser_Username(id, principal.getName()).map(x -> {
-            x.setTitle(form.getTitle());
-            x.setContent(form.getContent());
-            return x;
-        }).ifPresent(noteRepository::save);
+        noteService.update(principal.getName(), id, form);
         return "redirect:/";
     }
 
     @RequestMapping("/delete/{id}")
     public String delete(@PathVariable Long id, Principal principal) {
-        noteRepository.findByIdAndUser_Username(id, principal.getName()).ifPresent(noteRepository::delete);
+        noteService.delete(principal.getName(), id);
         return "redirect:/";
     }
 
