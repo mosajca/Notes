@@ -1,4 +1,4 @@
-package notes.model;
+package notes.model.note;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import java.time.OffsetDateTime;
+
+import notes.model.user.User;
 
 @Entity
 public class Note {

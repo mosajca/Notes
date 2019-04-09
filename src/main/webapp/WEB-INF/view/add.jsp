@@ -4,12 +4,12 @@
 <html lang="pl">
 <head>
     <meta charset="utf-8">
-    <title>Notes</title>
+    <title>Dodaj</title>
     <link rel="icon" href="/favicon.ico">
 </head>
 <body>
 
-<%--@elvariable id="form" type="notes.model.NoteForm"--%>
+<%--@elvariable id="form" type="notes.model.note.NoteForm"--%>
 <form:form action="/add" method="post" modelAttribute="form">
     <p>Tytuł: <form:input path="title"/></p>
     <p>Treść: <form:textarea path="content"/></p>
