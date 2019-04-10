@@ -1,0 +1,36 @@
+.note {
+    border: 2px solid black;
+}
+
+.note, header, footer {
+    margin-top: 5px;
+    text-align: center;
+}
+
+h2 {
+    text-align: center;
+    width: 100%;
+}
+
+header a, footer a {
+    background-color: darkblue;
+    border: 2px solid black;
+    color: white;
+    display: inline-block;
+    font-size: 20px;
+    font-weight: bold;
+    padding: 5px;
+    text-decoration: none;
+    width: 30%;
+}
+
+main {
+    padding-bottom: 50px;
+}
+
+footer {
+    bottom: 5px;
+    max-height: 50px;
+    position: fixed;
+    width: 100%;
+}

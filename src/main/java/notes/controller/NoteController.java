@@ -17,6 +17,7 @@ import notes.model.note.NoteForm;
 import notes.service.NoteService;
 
 @Controller
+@RequestMapping("notes")
 public class NoteController {
 
     private final NoteService noteService;
@@ -26,10 +27,10 @@ public class NoteController {
         this.noteService = noteService;
     }
 
-    @GetMapping("/")
+    @GetMapping
     public String main(Model model, Principal principal) {
         model.addAttribute("notes", noteService.findAll(principal.getName()));
-        return "main";
+        return "show";
     }
 
     @GetMapping("/add")
@@ -44,7 +45,7 @@ public class NoteController {
             return "add";
         }
         noteService.save(principal.getName(), form);
-        return "redirect:/";
+        return "redirect:/notes";
     }
 
     @GetMapping("/update/{id}")
@@ -61,13 +62,13 @@ public class NoteController {
             return "update";
         }
         noteService.update(principal.getName(), id, form);
-        return "redirect:/";
+        return "redirect:/notes";
     }
 
     @RequestMapping("/delete/{id}")
     public String delete(@PathVariable Long id, Principal principal) {
         noteService.delete(principal.getName(), id);
-        return "redirect:/";
+        return "redirect:/notes";
     }
 
 }

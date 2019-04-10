@@ -5,12 +5,13 @@
 <head>
     <meta charset="utf-8">
     <title>Dodaj</title>
+    <link rel="stylesheet" href="/main.css">
     <link rel="icon" href="/favicon.ico">
 </head>
 <body>
 
 <%--@elvariable id="form" type="notes.model.note.NoteForm"--%>
-<form:form action="/add" method="post" modelAttribute="form">
+<form:form method="post" modelAttribute="form">
     <p>Tytuł: <form:input path="title"/></p>
     <p>Treść: <form:textarea path="content"/></p>
     <button type="submit">dodaj</button>
