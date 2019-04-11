@@ -65,8 +65,13 @@ public class NoteController {
         return "redirect:/notes";
     }
 
-    @RequestMapping("/delete/{id}")
+    @GetMapping("/delete/{id}")
     public String delete(@PathVariable Long id, Principal principal) {
+        return noteService.findById(principal.getName(), id).map(x -> "delete").orElse("redirect:/");
+    }
+
+    @PostMapping("/delete/{id}")
+    public String deleteNote(@PathVariable Long id, Principal principal) {
         noteService.delete(principal.getName(), id);
         return "redirect:/notes";
     }
