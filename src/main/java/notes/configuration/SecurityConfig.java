@@ -31,9 +31,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/register", "/activate", "/favicon.ico").permitAll()
+                .antMatchers("/login", "/register", "/activate", "/favicon.ico", "/main.css", "/").permitAll()
                 .anyRequest().authenticated()
-                .and().formLogin();
+                .and().formLogin().loginPage("/login").and().logout().logoutSuccessUrl("/");
     }
 
     @Bean

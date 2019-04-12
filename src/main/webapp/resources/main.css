@@ -1,0 +1,49 @@
+.note {
+    background-color: whitesmoke;
+    border: 1px solid black;
+    margin-top: 5px;
+    padding: 5px;
+}
+
+header, footer {
+    margin-top: 5px;
+    text-align: center;
+}
+
+h2, h3 {
+    margin: 0;
+}
+
+h2 {
+    border: 2px solid black;
+    box-sizing: border-box;
+    padding: 5px;
+    text-align: center;
+    width: 100%;
+}
+
+button, header a, footer a, h2 {
+    background-color: darkblue;
+    color: white;
+    font-weight: bold;
+}
+
+header a, footer a {
+    border: 2px solid black;
+    display: inline-block;
+    font-size: 20px;
+    padding: 5px;
+    text-decoration: none;
+    width: 30%;
+}
+
+main {
+    padding-bottom: 50px;
+}
+
+footer {
+    bottom: 5px;
+    max-height: 50px;
+    position: fixed;
+    width: 100%;
+}

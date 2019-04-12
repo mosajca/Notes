@@ -1,6 +1,7 @@
 package notes.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -9,14 +10,17 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
 import javax.validation.Valid;
 
+import notes.model.note.Note;
 import notes.model.note.NoteForm;
 import notes.service.NoteService;
 
 @Controller
+@RequestMapping("notes")
 public class NoteController {
 
     private final NoteService noteService;
@@ -26,10 +30,12 @@ public class NoteController {
         this.noteService = noteService;
     }
 
-    @GetMapping("/")
-    public String main(Model model, Principal principal) {
-        model.addAttribute("notes", noteService.findAll(principal.getName()));
-        return "main";
+    @GetMapping
+    public String showNotes(Model model, Principal principal, @RequestParam(defaultValue = "0") int page) {
+        Page<Note> pageOfNotes = noteService.findAll(principal.getName(), page);
+        model.addAttribute("notes", pageOfNotes.getContent());
+        model.addAttribute("totalPages", pageOfNotes.getTotalPages());
+        return "show";
     }
 
     @GetMapping("/add")
@@ -44,7 +50,7 @@ public class NoteController {
             return "add";
         }
         noteService.save(principal.getName(), form);
-        return "redirect:/";
+        return "redirect:/notes";
     }
 
     @GetMapping("/update/{id}")
@@ -61,13 +67,18 @@ public class NoteController {
             return "update";
         }
         noteService.update(principal.getName(), id, form);
-        return "redirect:/";
+        return "redirect:/notes";
     }
 
-    @RequestMapping("/delete/{id}")
+    @GetMapping("/delete/{id}")
     public String delete(@PathVariable Long id, Principal principal) {
+        return noteService.findById(principal.getName(), id).map(x -> "delete").orElse("redirect:/");
+    }
+
+    @PostMapping("/delete/{id}")
+    public String deleteNote(@PathVariable Long id, Principal principal) {
         noteService.delete(principal.getName(), id);
-        return "redirect:/";
+        return "redirect:/notes";
     }
 
 }
