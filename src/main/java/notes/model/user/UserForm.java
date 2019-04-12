@@ -7,13 +7,13 @@ import javax.validation.constraints.Size;
 public class UserForm {
 
     @NotNull
-    @Size(max = 255)
+    @Size(min = 1, max = 255)
     private String username;
     @NotNull
-    @Size(max = 255)
+    @Size(min = 8, max = 255)
     private String password;
     @NotNull
-    @Size(max = 255)
+    @Size(min = 3, max = 255)
     @Email
     private String email;
 

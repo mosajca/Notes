@@ -31,8 +31,12 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public String registerUser(@ModelAttribute("form") @Valid UserForm form, BindingResult result) {
-        if (result.hasErrors() || userService.existsByUsernameOrEmail(form.getUsername(), form.getEmail())) {
+    public String registerUser(Model model, @ModelAttribute("form") @Valid UserForm form, BindingResult result) {
+        if (userService.existsByUsernameOrEmailAllIgnoreCase(form.getUsername(), form.getEmail())) {
+            model.addAttribute("info", "username or email already exists");
+            return "register";
+        }
+        if (result.hasErrors()) {
             return "register";
         }
         userService.saveAndSendActivationLink(form);

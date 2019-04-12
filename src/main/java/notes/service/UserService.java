@@ -25,8 +25,8 @@ public class UserService {
         this.emailService = emailService;
     }
 
-    public boolean existsByUsernameOrEmail(String username, String email) {
-        return userRepository.existsByUsernameOrEmail(username, email);
+    public boolean existsByUsernameOrEmailAllIgnoreCase(String username, String email) {
+        return userRepository.existsByUsernameOrEmailAllIgnoreCase(username, email);
     }
 
     public void saveAndSendActivationLink(UserForm form) {

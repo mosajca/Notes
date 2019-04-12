@@ -14,19 +14,30 @@
     <a href="/notes/add">Dodaj</a>
     <a href="/logout">Wyloguj</a>
 </header>
-<%--@elvariable id="notes" type="java.util.List<notes.model.note.Note>"--%>
-<c:forEach var="note" items="${notes}">
-    <div class="note">
-        <h2><c:out value="${note.title}"/></h2>
-        <p><c:out value="${note.content}"/></p>
-        <p>Utworzono: <c:out value="${note.creationTimestamp}"/></p>
-        <p>Zmodyfikowano: <c:out value="${note.updateTimestamp}"/></p>
-        <p>
-            <a href="/notes/update/${note.id}">aktualizuj</a>
-            <a href="/notes/delete/${note.id}">usuń</a>
-        </p>
-    </div>
-</c:forEach>
-
+<main>
+    <%--@elvariable id="notes" type="java.util.List<notes.model.note.Note>"--%>
+    <c:forEach var="note" items="${notes}">
+        <div class="note">
+            <h3><c:out value="${note.title}"/></h3>
+            <p><c:out value="${note.content}"/></p>
+            <p>Utworzono: <c:out value="${note.creationTimestamp}"/></p>
+            <p>Zmodyfikowano: <c:out value="${note.updateTimestamp}"/></p>
+            <p>
+                <a href="/notes/update/${note.id}">aktualizuj</a>
+                <a href="/notes/delete/${note.id}">usuń</a>
+            </p>
+        </div>
+    </c:forEach>
+</main>
+<footer>
+    <c:set value="${empty param.page ? 0 : param.page}" var="currentPage"/>
+    <c:if test="${currentPage > 0}">
+        <a href="/notes?page=${currentPage - 1}">nowsze</a>
+    </c:if>
+    <%--@elvariable id="totalPages" type="java.lang.Integer"--%>
+    <c:if test="${currentPage + 1 < totalPages}">
+        <a href="/notes?page=${currentPage + 1}">starsze</a>
+    </c:if>
+</footer>
 </body>
 </html>

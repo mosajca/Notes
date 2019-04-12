@@ -1,9 +1,11 @@
 package notes.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 import notes.model.note.Note;
@@ -21,8 +23,9 @@ public class NoteService {
         this.noteRepository = noteRepository;
     }
 
-    public List<Note> findAll(String username) {
-        return noteRepository.findByUser_Username(username);
+    public Page<Note> findAll(String username, int page) {
+        PageRequest pageRequest = PageRequest.of(page < 0 ? 0 : page, 10, Sort.by("updateTimestamp").descending());
+        return noteRepository.findByUser_Username(username, pageRequest);
     }
 
     public Optional<Note> findById(String username, Long id) {

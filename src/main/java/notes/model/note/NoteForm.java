@@ -6,9 +6,9 @@ import javax.validation.constraints.Size;
 public class NoteForm {
 
     @NotNull
-    @Size(max = 255)
+    @Size(min = 1, max = 255)
     private String title;
-    @Size(max = 2000)
+    @Size(min = 1, max = 2000)
     private String content;
 
     public NoteForm() {
